@@ -2,5 +2,13 @@
     {
         "description": "Do Laundry",
         "completed": false
+    },
+    {
+        "description": "Buy groceries",
+        "completed": true
+    },
+    {
+        "description": "Cook Lunch",
+        "completed": false
     }
 ]

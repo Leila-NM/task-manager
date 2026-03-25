@@ -54,7 +54,7 @@ def delete_task(tasks):
             print("Please enter a valid number.")
 
 
-def complete_task(tasks):
+def toggle_task(tasks):
     if not tasks:
         print("No tasks available.")
         return
@@ -64,17 +64,43 @@ def complete_task(tasks):
         print(f"{index}. {task['description']} [{status}]")
 
     try:
-        task_num = int(input("Enter the task number to mark as completed: "))
+        task_num = int(
+            input("Enter the task number to mark as Complete/Incomplete: "))
 
         if 1 <= task_num <= len(tasks):
             tasks[task_num - 1]["completed"] = not tasks[task_num - 1]["completed"]
+
+            task = tasks[task_num - 1]
+            status = "completed ✓" if task["completed"] else "marked as pending ✗"
+
             save_tasks(tasks)
-            print("Task status updated.")
+            print(f"Task {status}.")
+
         else:
             print("Invalid task number.")
 
     except ValueError:
         print("Please enter a valid number.")
+
+
+def view_completed_tasks(tasks):
+    completed_tasks = [task for task in tasks if task["completed"]]
+
+    if not completed_tasks:
+        print("No completed tasks.")
+    else:
+        for index, task in enumerate(completed_tasks, start=1):
+            print(f"{index}. {task['description']} [✓]")
+
+
+def view_pending_tasks(tasks):
+    pending_tasks = [task for task in tasks if not task["completed"]]
+
+    if not pending_tasks:
+        print("No pending tasks.")
+    else:
+        for index, task in enumerate(pending_tasks, start=1):
+            print(f"{index}. {task['description']} [✗]")
 
 
 def main():
@@ -83,23 +109,36 @@ def main():
     while True:
         print("\nTask Manager")
         print("1. Add Task")
-        print("2. View Tasks")
-        print("3. Delete task")
-        print("4. Mark Task as Completed")
-        print("5. Exit")
+        print("2. View All Tasks")
+        print("3. View Completed Tasks")
+        print("4. View pending Tasks")
+        print("5. Toggle Task Completion")
+        print("6. Delete task")
+        print("7. Exit")
 
         choice = input("Choose an option: ")
         if choice == "1":
             add_task(tasks)
+
         elif choice == "2":
             view_tasks(tasks)
+
         elif choice == "3":
-            delete_task(tasks)
+            view_completed_tasks(tasks)
+
         elif choice == "4":
-            complete_task(tasks)
+            view_pending_tasks(tasks)
+
         elif choice == "5":
+            toggle_task(tasks)
+
+        elif choice == "6":
+            delete_task(tasks)
+
+        elif choice == "7":
             print("Goodbye!")
             break
+
         else:
             print("Invalid option.")
 
