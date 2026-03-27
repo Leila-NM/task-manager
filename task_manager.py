@@ -15,16 +15,22 @@ def save_tasks(tasks):
 
 
 def add_task(tasks):
-    descript = input("Enter a task description: ")
+    descript = input("Enter a task description: ").strip()
+
+    if not descript:
+        print("Task description cannot be empty.")
+        return
+
     tasks.append({
         "description": descript,
         "completed": False
     })
+
     save_tasks(tasks)
     print("Task added successfully.")
 
 
-def view_tasks(tasks):
+def display_tasks(tasks):
     if not tasks:
         print("No tasks available.")
     else:
@@ -38,7 +44,7 @@ def delete_task(tasks):
         print("There are no tasks to delete")
     else:
         for index, task in enumerate(tasks, start=1):
-            print(f"{index}. {task}")
+            print(f"{index}. {task['description']}")
 
         try:
             task_num = int(input("Enter the task number to delete: "))
@@ -83,24 +89,10 @@ def toggle_task(tasks):
         print("Please enter a valid number.")
 
 
-def view_completed_tasks(tasks):
-    completed_tasks = [task for task in tasks if task["completed"]]
-
-    if not completed_tasks:
-        print("No completed tasks.")
-    else:
-        for index, task in enumerate(completed_tasks, start=1):
-            print(f"{index}. {task['description']} [✓]")
-
-
-def view_pending_tasks(tasks):
-    pending_tasks = [task for task in tasks if not task["completed"]]
-
-    if not pending_tasks:
-        print("No pending tasks.")
-    else:
-        for index, task in enumerate(pending_tasks, start=1):
-            print(f"{index}. {task['description']} [✗]")
+def filter_tasks(tasks, completed=None):
+    if completed is None:
+        return tasks
+    return [task for task in tasks if task["completed"] == completed]
 
 
 def main():
@@ -121,13 +113,13 @@ def main():
             add_task(tasks)
 
         elif choice == "2":
-            view_tasks(tasks)
+            display_tasks(filter_tasks(tasks))
 
         elif choice == "3":
-            view_completed_tasks(tasks)
+            display_tasks(filter_tasks(tasks, completed=True))
 
         elif choice == "4":
-            view_pending_tasks(tasks)
+            display_tasks(filter_tasks(tasks, completed=False))
 
         elif choice == "5":
             toggle_task(tasks)
