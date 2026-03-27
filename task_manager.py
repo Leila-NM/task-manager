@@ -95,6 +95,46 @@ def filter_tasks(tasks, completed=None):
     return [task for task in tasks if task["completed"] == completed]
 
 
+def search_tasks(tasks, keyword, completed=None):
+    keyword = keyword.lower()
+
+    filtered = filter_tasks(tasks, completed)
+
+    return [
+        task for task in filtered
+        if keyword in task["description"].lower()
+    ]
+
+
+def search_tasks_ui(tasks):
+    keyword = input("Enter keyword to search: ").strip().lower()
+
+    if not keyword:
+        print("Search keyword cannot be empty.")
+        return
+
+    print("1. Search all tasks")
+    print("2. Search Completed tasks")
+    print("3. Search Pending tasks")
+
+    choice = input("Choose a filter option: ")
+
+    if choice == "1":
+        results = search_tasks(tasks, keyword)
+
+    elif choice == "2":
+        results = search_tasks(tasks, keyword, completed=True)
+
+    elif choice == "3":
+        results = search_tasks(tasks, keyword, completed=False)
+
+    else:
+        print("Invalid choice.")
+        return
+
+    display_tasks(results)
+
+
 def main():
     tasks = load_tasks()
 
@@ -106,7 +146,8 @@ def main():
         print("4. View pending Tasks")
         print("5. Toggle Task Completion")
         print("6. Delete task")
-        print("7. Exit")
+        print("7. Search Tasks")
+        print("8. Exit")
 
         choice = input("Choose an option: ")
         if choice == "1":
@@ -128,6 +169,9 @@ def main():
             delete_task(tasks)
 
         elif choice == "7":
+            search_tasks_ui(tasks)
+
+        elif choice == "8":
             print("Goodbye!")
             break
 
