@@ -16,6 +16,7 @@ def save_tasks(tasks):
 
 def add_task(tasks):
     descript = input("Enter a task description: ").strip()
+    priority = input("Enter priority (High / Medium / Low): ").capitalize()
 
     if not descript:
         print("Task description cannot be empty.")
@@ -24,6 +25,7 @@ def add_task(tasks):
     tasks.append({
         "description": descript,
         "completed": False
+        "priority": priority
     })
 
     save_tasks(tasks)
@@ -36,7 +38,8 @@ def display_tasks(tasks):
     else:
         for index, task in enumerate(tasks, start=1):
             status = "✓" if task["completed"] else "✗"
-            print(f"{index}. {task['description']} [{status}]")
+            print(
+                f"{index}. {task['description']} [{status}] ({task['priority']})")
 
 
 def delete_task(tasks):
@@ -135,6 +138,12 @@ def search_tasks_ui(tasks):
     display_tasks(results)
 
 
+def sort_tasks_by_priority(tasks):
+    priority_order = {"High": 1, "Medium": 2, "Low": 3}
+    tasks.sort(key=lambda task: priority_order.get(task["priority"], 4))
+    print("Tasks sorted by priority.")
+
+
 def main():
     tasks = load_tasks()
 
@@ -147,7 +156,8 @@ def main():
         print("5. Toggle Task Completion")
         print("6. Delete task")
         print("7. Search Tasks")
-        print("8. Exit")
+        print("8. Sort Tasks by Priority")
+        print("9. Exit")
 
         choice = input("Choose an option: ")
         if choice == "1":
@@ -172,6 +182,9 @@ def main():
             search_tasks_ui(tasks)
 
         elif choice == "8":
+            sort_tasks_by_priority(tasks)
+
+        elif choice == "9":
             print("Goodbye!")
             break
 
