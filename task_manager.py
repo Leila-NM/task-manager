@@ -167,6 +167,38 @@ def sort_tasks_by_priority(tasks):
     display_tasks(sorted_tasks)
 
 
+def get_overdue_tasks(tasks):
+    today = datetime.today().date()
+    result = []
+
+    for task in tasks:
+        if "due_date" not in task:
+            continue
+
+        due_date = datetime.strptime(task["due_date"], "%Y-%m-%d").date()
+
+        if not task["completed"] and due_date < today:
+            result.append(task)
+
+    return sorted(result, key=lambda t: {"High": 3, "Medium": 2, "Low": 1}.get(t.get("priority", "Low"), 1), reverse=True)
+
+
+def get_tasks_due_today(tasks):
+    today = datetime.today().date()
+    result = []
+
+    for task in tasks:
+        if "due_date" not in task:
+            continue
+
+        due_date = datetime.strptime(task["due_date"], "%Y-%m-%d").date()
+
+        if not task["completed"] and due_date == today:
+            result.append(task)
+
+    return sorted(result, key=lambda t: {"High": 3, "Medium": 2, "Low": 1}.get(t.get("priority", "Low"), 1), reverse=True)
+
+
 def main():
     tasks = load_tasks()
 
@@ -180,7 +212,9 @@ def main():
         print("6. Delete task")
         print("7. Search Tasks")
         print("8. Sort Tasks by Priority")
-        print("9. Exit")
+        print("9. View Overdue Tasks")
+        print("10. View Tasks Due Today")
+        print("11. Exit")
 
         choice = input("Choose an option: ")
         if choice == "1":
@@ -208,6 +242,16 @@ def main():
             sort_tasks_by_priority(tasks)
 
         elif choice == "9":
+            overdue = get_overdue_tasks(tasks)
+            print("\nOverdue Tasks:")
+            display_tasks(overdue)
+
+        elif choice == "10":
+            today_tasks = get_tasks_due_today(tasks)
+            print("\nTasks Due Today:")
+            display_tasks(today_tasks)
+
+        elif choice == "11":
             print("Goodbye!")
             break
 
