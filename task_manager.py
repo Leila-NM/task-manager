@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 
 def load_tasks():
@@ -17,15 +18,27 @@ def save_tasks(tasks):
 def add_task(tasks):
     descript = input("Enter a task description: ").strip()
     priority = input("Enter priority (High / Medium / Low): ").capitalize()
+    due_date = input("Enter task due date (YYYY-MM-DD): ").strip()
 
     if not descript:
         print("Task description cannot be empty.")
         return
 
+    if priority not in ["High", "Medium", "Low"]:
+        print("Invalid priority.")
+        return
+
+    try:
+        datetime.strptime(due_date, "%Y-%m-%d")
+    except ValueError:
+        print("Invalid date format.")
+        return
+
     tasks.append({
         "description": descript,
-        "completed": False
-        "priority": priority
+        "completed": False,
+        "priority": priority,
+        "due-date": due_date
     })
 
     save_tasks(tasks)
@@ -38,8 +51,11 @@ def display_tasks(tasks):
     else:
         for index, task in enumerate(tasks, start=1):
             status = "✓" if task["completed"] else "✗"
+            due = task.get("due_date", "No date")
+            priority = task.get("priority", "Low")
+
             print(
-                f"{index}. {task['description']} [{status}] ({task['priority']})")
+                f"{index}. {task['description']} [{status}] ({priority}) (Due: {due})")
 
 
 def delete_task(tasks):
@@ -139,9 +155,16 @@ def search_tasks_ui(tasks):
 
 
 def sort_tasks_by_priority(tasks):
-    priority_order = {"High": 1, "Medium": 2, "Low": 3}
-    tasks.sort(key=lambda task: priority_order.get(task["priority"], 4))
-    print("Tasks sorted by priority.")
+    priority_order = {"High": 3, "Medium": 2, "Low": 1}
+
+    sorted_tasks = sorted(
+        tasks,
+        key=lambda task: priority_order.get(task.get("priority", "Low"), 1),
+        reverse=True
+    )
+
+    print("\nTasks sorted by priority:")
+    display_tasks(sorted_tasks)
 
 
 def main():

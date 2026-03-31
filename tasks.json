@@ -1,14 +1,17 @@
 [
     {
         "description": "Do Laundry",
-        "completed": false
+        "completed": false,
+        "priority": "High"
     },
     {
-        "description": "Buy groceries",
-        "completed": true
+        "description": "Cook supper",
+        "completed": false,
+        "priority": "Medium"
     },
     {
-        "description": "Cook Lunch",
-        "completed": false
+        "description": "Feed the Dog",
+        "completed": false,
+        "priority": "High"
     }
 ]
