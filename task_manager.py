@@ -38,7 +38,7 @@ def add_task(tasks):
         "description": descript,
         "completed": False,
         "priority": priority,
-        "due-date": due_date
+        "due_date": due_date
     })
 
     save_tasks(tasks)
